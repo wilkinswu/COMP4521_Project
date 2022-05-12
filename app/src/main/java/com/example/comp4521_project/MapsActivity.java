@@ -1,3 +1,5 @@
+//this file is not used! map is in home fragment!
+
 package com.example.comp4521_project;
 
 import android.graphics.Color;
@@ -12,7 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.comp4521_project.databinding.ActivityMapsBinding;
+import com.example.comp4521_project.databinding.FragmentMapsBinding;
 //import com.google.maps.android.data.geojson.*;
 //import com.google.maps.android.data.geojson.GeoJsonLayer;
 //import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
@@ -20,13 +22,13 @@ import com.example.comp4521_project.databinding.ActivityMapsBinding;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ActivityMapsBinding binding;
+    private FragmentMapsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMapsBinding.inflate(getLayoutInflater());
+        binding = FragmentMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -48,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
