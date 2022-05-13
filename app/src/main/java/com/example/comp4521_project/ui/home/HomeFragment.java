@@ -1,12 +1,16 @@
 package com.example.comp4521_project.ui.home;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,25 +20,44 @@ import com.example.comp4521_project.databinding.FragmentMapsBinding;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.comp4521_project.databinding.FragmentMapsBinding;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.widget.Toast;
+
 import java.util.Map;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback{
+public class HomeFragment extends Fragment
+        implements OnMapReadyCallback,
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        View.OnClickListener {
 
-    private GoogleMap mMap;
     //private FragmentHomeBinding binding;
     private FragmentMapsBinding binding;
+    //private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    //private boolean permissionDenied = false;
+    private GoogleMap mMap;
+    private SupportMapFragment mapFragment;
+    Button btnChangeType;
 
     @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        HomeViewModel homeViewModel =
 //                new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -44,48 +67,93 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 //        final TextView textView = binding.textHome;
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 //        return root;
-        return inflater.inflate(R.layout.fragment_home, container,false);
+        View myView = inflater.inflate(R.layout.fragment_home, container,false);
+        btnChangeType = (Button) myView.findViewById(R.id.btnChangeType);
+        btnChangeType.setOnClickListener(this);
+        return myView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
-        SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        fragment.getMapAsync(this);
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
+    @SuppressLint("MissingPermission")
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        LatLng Kyiv = new LatLng(50.431759, 30.517023);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.addMarker(new MarkerOptions().position(Kyiv).title("Kyiv"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kyiv, 3F));
+        // Add a marker in Sydney / Kyiv
+        LatLng sydneyLatLng = new LatLng(-34, 151);
+        LatLng KyivLatLng = new LatLng(50.431759, 30.517023);
+        mMap.addMarker(new MarkerOptions().position(sydneyLatLng).title("Marker in Sydney"));
+        mMap.addMarker(new MarkerOptions().position(KyivLatLng).title("Kyiv").snippet("Capital of Ukraine!!"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(KyivLatLng, 5));
 
-//        try {
-//            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.es_geojson, getApplicationContext());
-//
-//            GeoJsonPolygonStyle style = layer.getDefaultPolygonStyle();
-//            style.setFillColor(Color.MAGENTA);
-//            style.setStrokeColor(Color.MAGENTA);
-//            style.setStrokeWidth(1F);
-//
-//            layer.addLayerToMap();
-//
-//        } catch (IOException ex) {
-//            Log.e("IOException", ex.getLocalizedMessage());
-//        } catch (JSONException ex) {
-//            Log.e("JSONException", ex.getLocalizedMessage());
-//        }
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
+        enableMyLocation();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void enableMyLocation() {
+        // 1. Check if permissions are granted, if so, enable the my location layer
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            if (mMap != null) {
+                mMap.setMyLocationEnabled(true);
+            }
+        } else {
+            // Permission to access the location is missing. Show rationale and request permission
+//            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE, mManifest.permission.ACCESS_FINE_LOCATION, true);
+            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 100);
+        }
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(getActivity(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
     }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(
+                requestCode, permissions, grantResults);
+        // Check condition
+        if (requestCode == 100 && (grantResults.length > 0) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+            // When permission are granted
+            // Call  method
+            enableMyLocation();
+        }
+        else {
+            // When permission are denied
+            // Display toast
+            Toast.makeText(getActivity(),"Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+        else
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+    }
+
 }
+

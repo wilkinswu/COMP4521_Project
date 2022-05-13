@@ -2,11 +2,23 @@
 
 package com.example.comp4521_project;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.RestrictionsManager;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.widget.Toast;
+
 import com.google.android.gms.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,10 +31,16 @@ import com.example.comp4521_project.databinding.FragmentMapsBinding;
 //import com.google.maps.android.data.geojson.GeoJsonLayer;
 //import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener,
+        OnMapReadyCallback {
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private boolean permissionDenied = false;
 
     private GoogleMap mMap;
     private FragmentMapsBinding binding;
+    private RestrictionsManager PermissionUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -58,7 +77,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.addMarker(new MarkerOptions().position(Kyiv).title("Marker in Kyiv"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kyiv, 3F));
-
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
 //        try {
 //            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.es_geojson, getApplicationContext());
 //
@@ -74,5 +95,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        } catch (JSONException ex) {
 //            Log.e("JSONException", ex.getLocalizedMessage());
 //        }
+    }
+
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT)
+                .show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG)
+                .show();
     }
 }
