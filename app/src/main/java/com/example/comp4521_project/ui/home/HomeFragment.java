@@ -1,6 +1,8 @@
 package com.example.comp4521_project.ui.home;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,8 +46,7 @@ public class HomeFragment extends Fragment
         implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
-        ActivityCompat.OnRequestPermissionsResultCallback,
-        View.OnClickListener {
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
     //private FragmentHomeBinding binding;
     private FragmentMapsBinding binding;
@@ -69,7 +70,17 @@ public class HomeFragment extends Fragment
 //        return root;
         View myView = inflater.inflate(R.layout.fragment_home, container,false);
         btnChangeType = myView.findViewById(R.id.btnChangeType);
-        btnChangeType.setOnClickListener(this);
+        btnChangeType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                }
+                else
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
+        });
+
         return myView;
     }
 
@@ -99,6 +110,65 @@ public class HomeFragment extends Fragment
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(@NonNull LatLng latLng) {
+                String strLatitude = String.format("%.2f", latLng.latitude);
+                String strLongitude = String.format("%.2f", latLng.longitude);
+                mMap.addMarker(new MarkerOptions().position(latLng)
+                                .title("Post here")
+                                .snippet("Location" + "(" + strLatitude + ", " + strLongitude + ")"))
+                                .setDraggable(true);
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                String strLatitude = String.format("%.2f", marker.getPosition().latitude);
+                String strLongitude = String.format("%.2f", marker.getPosition().longitude);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                // Add the buttons
+                builder.setTitle("Confirm Location");
+                builder.setMessage("Are you sure to make a post in: \n" +
+                        "Location" + "(" + strLatitude + ", " + strLongitude + ") ?");
+
+                builder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Todo: start a post
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+                // Set other dialog properties
+
+                // Create the AlertDialog
+                builder.create().show();
+                return false;
+            }
+        });
+
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(@NonNull Marker marker) {
+                marker.remove();
+            }
+
+            @Override
+            public void onMarkerDrag(@NonNull Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(@NonNull Marker marker) {
+
+            }
+
+        });
     }
 
     @SuppressLint("MissingPermission")
@@ -118,7 +188,7 @@ public class HomeFragment extends Fragment
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(getActivity(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;
@@ -127,6 +197,10 @@ public class HomeFragment extends Fragment
     @Override
     public void onMyLocationClick(@NonNull Location location) {
         Toast.makeText(getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        mMap.addMarker(new MarkerOptions()
+                .title("Your current location")
+                .position(new LatLng(location.getLatitude(), location.getLongitude())));
+
     }
 
     @Override
@@ -146,14 +220,14 @@ public class HomeFragment extends Fragment
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
-            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        }
-        else
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-    }
+//    @Override
+//    public void onClick(View v) {
+//        if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
+//            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+//        }
+//        else
+//            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//    }
 
 }
 
