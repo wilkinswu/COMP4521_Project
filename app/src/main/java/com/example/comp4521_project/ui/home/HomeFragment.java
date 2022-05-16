@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 //        return root;
         View myView = inflater.inflate(R.layout.fragment_home, container,false);
-        btnChangeType = (Button) myView.findViewById(R.id.btnChangeType);
+        btnChangeType = myView.findViewById(R.id.btnChangeType);
         btnChangeType.setOnClickListener(this);
         return myView;
     }
@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);

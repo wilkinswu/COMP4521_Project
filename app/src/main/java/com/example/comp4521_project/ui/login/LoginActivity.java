@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -155,4 +156,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public SharedPreferences getAppSharedPreferences() {
+        return getSharedPreferences("myshare", MODE_PRIVATE);
+    }
 }
