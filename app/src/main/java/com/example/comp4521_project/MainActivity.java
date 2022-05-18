@@ -13,6 +13,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.comp4521_project.databinding.ActivityMainBinding;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
