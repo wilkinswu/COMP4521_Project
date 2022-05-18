@@ -57,6 +57,7 @@ public class PersonalFragment extends Fragment {
         cookieRequest.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         personalViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 
