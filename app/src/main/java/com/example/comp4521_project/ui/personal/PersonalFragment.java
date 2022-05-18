@@ -78,9 +78,11 @@ public class PersonalFragment extends Fragment {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError{
                 HashMap localHashMap = new HashMap();
-                Log.i("cookie", getSettingNote("Cookie"));
+                SharedPreferences read = personalActivity.getAppSharedPreferences();
+                String cookie =   read.getString("Cookie", "");
+                Log.i("cookie", cookie);
 
-                localHashMap.put("Cookie is ", getSettingNote("Cookie"));
+                localHashMap.put("Cookie is ",cookie);
 
                 return localHashMap;
             }
@@ -98,10 +100,9 @@ public class PersonalFragment extends Fragment {
         binding = null;
     }
 
-    public String getSettingNote(String s){
-        SharedPreferences read = personalActivity.getAppSharedPreferences();
-        return  read.getString(s, "");
-
-    }
+//    public String getSettingNote(String s){
+//
+//
+//    }
 
 }
