@@ -50,11 +50,11 @@ public class PersonalFragment extends Fragment {
         final TextView textView = binding.textPersonal;
 
 
-//        final String GET_URL = "http://125.59.138.87:8090/api/basic/getProfile";
-//
-//        CookieRequest cookieRequest = new CookieRequest(getActivity(), GET_URL);
-//
-//        cookieRequest.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final String GET_URL = "http://125.59.138.87:8090/api/basic/getProfile";
+
+        CookieRequest cookieRequest = new CookieRequest(getActivity(), GET_URL);
+
+        cookieRequest.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         personalViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
