@@ -2,8 +2,10 @@ package com.example.comp4521_project.ui.personal;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,26 +24,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.comp4521_project.databinding.FragmentPersonalBinding;
-import com.example.comp4521_project.ui.login.LoginActivity;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import com.google.gson.Gson;
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.net.CookieStore;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PersonalFragment extends Fragment {
 
     private FragmentPersonalBinding binding;
-    private PersonalActivity personalActivity;
+    private PersonalActivity personalActivity = new PersonalActivity();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,24 +58,25 @@ public class PersonalFragment extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: " + response.substring(0, 500));
+                        // Display the payload.
+                        ResponseProfile rspJson = new Gson().fromJson(response, ResponseProfile.class);
+                        textView.setText(new Gson().toJson(rspJson.payload));
                     }
-
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 textView.setText("That didn't work!");
             }
-        }){
+        }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError{
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap localHashMap = new HashMap();
-                SharedPreferences read = personalActivity.getAppSharedPreferences();
-                String cookie =   read.getString("Cookie", "");
-                Log.i("cookie", cookie);
 
-                localHashMap.put("Cookie is ",cookie);
+                Context context = getActivity();
+                SharedPreferences sp = context.getSharedPreferences( "myshare", Context.MODE_PRIVATE);
+                String contentInSharePref = sp.getString("Cookie", "default value");
+                Log.i("Cookie", contentInSharePref);
+                localHashMap.put("Cookie", contentInSharePref);
 
                 return localHashMap;
             }
@@ -100,9 +94,23 @@ public class PersonalFragment extends Fragment {
         binding = null;
     }
 
-//    public String getSettingNote(String s){
-//
-//
-//    }
+
+    public class Payload {
+        int uid;
+        String username;
+        String nickname;
+        int account_level;
+        int account_status;
+        String date_modified;
+        String date_creation;
+        String date_last_login;
+
+    }
+
+    public class ResponseProfile {
+        String message;
+        Payload payload;
+
+    }
 
 }
