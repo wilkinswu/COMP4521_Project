@@ -26,6 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
 
+        android:layout_marginBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -37,30 +38,42 @@
     <Button
         android:id="@+id/btnChangeType"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="31dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:text="Map Type"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        android:textSize="10sp"
+        android:alpha="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="148dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="Long press to add or \ndelete a marker"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textIsSelectable="false"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnChangeType"
+    <Button
+        android:id="@+id/btnInstruction"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="10dp"
+        android:text="Instruction"
+        android:textSize="10sp"
+        android:alpha="0.7"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="148dp"-->
+<!--        android:fontFamily="sans-serif-medium"-->
+<!--        android:text="Long press to add or \ndelete a marker"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textIsSelectable="false"-->
+<!--        android:textStyle="italic"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/btnChangeType"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

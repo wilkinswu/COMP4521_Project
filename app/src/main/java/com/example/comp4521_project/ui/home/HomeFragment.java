@@ -2,8 +2,20 @@ package com.example.comp4521_project.ui.home;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
+import android.util.Log;
+import android.view.DragAndDropPermissions;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +28,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.comp4521_project.MainActivity;
 import com.example.comp4521_project.R;
 import com.example.comp4521_project.databinding.FragmentHomeBinding;
 import com.example.comp4521_project.databinding.FragmentMapsBinding;
 
+import com.example.comp4521_project.ui.dashboard.DashboardFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -29,6 +43,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -50,11 +66,16 @@ public class HomeFragment extends Fragment
 
     //private FragmentHomeBinding binding;
     private FragmentMapsBinding binding;
-    //private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    //private boolean permissionDenied = false;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
-    Button btnChangeType;
+    private DashboardFragment dashboardFragment;
+    private MainActivity mainActivity;
+    Button btnChangeType, btnInstruction;
+
+    public HomeFragment(MainActivity m, DashboardFragment f){
+        dashboardFragment = f;
+        mainActivity = m;
+    }
 
     @NonNull
     @Override
@@ -70,6 +91,7 @@ public class HomeFragment extends Fragment
 //        return root;
         View myView = inflater.inflate(R.layout.fragment_home, container,false);
         btnChangeType = myView.findViewById(R.id.btnChangeType);
+        btnInstruction = myView.findViewById(R.id.btnInstruction);
         btnChangeType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +103,13 @@ public class HomeFragment extends Fragment
             }
         });
 
+
+        btnInstruction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInstructionDialog();
+            }
+        });
         return myView;
     }
 
@@ -94,6 +123,7 @@ public class HomeFragment extends Fragment
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        showInstructionDialog();
         mMap = googleMap;
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -116,10 +146,40 @@ public class HomeFragment extends Fragment
             public void onMapLongClick(@NonNull LatLng latLng) {
                 String strLatitude = String.format("%.2f", latLng.latitude);
                 String strLongitude = String.format("%.2f", latLng.longitude);
-                mMap.addMarker(new MarkerOptions().position(latLng)
+
+                String result = "";
+                final String[] items = {"Help","Notification","Warning"};
+                AlertDialog.Builder listDialog = new AlertDialog.Builder(getActivity());
+                listDialog.setTitle("Please choose your marker type");
+                listDialog.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity(), "You have chose " + items[which], Toast.LENGTH_SHORT).show();
+                        MarkerOptions markerOptions = new MarkerOptions()
                                 .title("Post here")
-                                .snippet("Location" + "(" + strLatitude + ", " + strLongitude + ")"))
-                                .setDraggable(true);
+                                .position(latLng)
+                                .snippet("Location" + "(" + strLatitude + ", " + strLongitude + ")")
+                                .draggable(true);
+                        switch (items[which]) {
+                            case "Help":
+                                markerOptions.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_baseline_help_24));
+                                mMap.addMarker(markerOptions).setTag("Help");
+                                break;
+                            case "Notification":
+                                markerOptions.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_baseline_notifications_24));
+                                mMap.addMarker(markerOptions).setTag("Notification");
+                                break;
+                            case "Warning":
+                                markerOptions.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_baseline_warning_24));
+                                mMap.addMarker(markerOptions).setTag("Warning");
+                                break;
+                            default:
+                                break;
+                        }
+
+                    }
+                });
+                listDialog.show();
             }
         });
 
@@ -138,6 +198,12 @@ public class HomeFragment extends Fragment
                     public void onClick(DialogInterface dialog, int id) {
                         // Todo: start a post
 
+                        SharedPreferences share = getActivity().getSharedPreferences("myshare", Context.MODE_PRIVATE);
+                        String name = share.getString("username", null);
+                        LatLng loc = marker.getPosition();
+                        String type = (String) marker.getTag();
+                        mainActivity.clickDashboard();
+                        dashboardFragment.clickOnInputField(name, loc, type);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -219,6 +285,37 @@ public class HomeFragment extends Fragment
             Toast.makeText(getActivity(),"Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void showInstructionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        TextView title = new TextView(getActivity());
+        title.setText("Instruction");
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(25);
+        title.setGravity(Gravity.CENTER);
+        builder.setCustomTitle(title);
+        //builder.setTitle("Instruction");
+        builder.setMessage("1. Long press to place or delete a marker.\n" +
+                "2. You can also click yourself to place a marker.\n" +
+                "3. Click on a marker to make a post.");
+        builder.setPositiveButton("Got it!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {}
+        });
+        builder.create().show();
+      
+    }
+
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0,0,vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
 
 //    @Override
 //    public void onClick(View v) {

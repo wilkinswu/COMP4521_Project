@@ -160,3 +160,4 @@ public class LoginActivity extends AppCompatActivity {
         return getSharedPreferences("myshare", MODE_PRIVATE);
     }
 }
+
