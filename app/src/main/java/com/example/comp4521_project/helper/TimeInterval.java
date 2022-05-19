@@ -45,7 +45,7 @@ public class TimeInterval {
         else if (sec != 0)
             return sec + " sec";
         else
-            return "error!";
+            return "now";
 
     }
 }
