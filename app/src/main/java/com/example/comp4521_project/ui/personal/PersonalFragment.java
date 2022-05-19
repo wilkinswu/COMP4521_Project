@@ -76,19 +76,7 @@ public class PersonalFragment extends Fragment {
                 tvStatus.setText(s);
                 ProfileModel.Response profileModel = gson.fromJson(s, ProfileModel.Response.class);
                 Log.i("Get_Profile", profileModel.message);
-//                try {
-////                    ProfileModel.Response profileModel = gson.fromJson(s, ProfileModel.Response.class);
-////                    tvNickname.setText(profileModel.payload.nickname);
-////                    tvUsername.setText(profileModel.payload.username);
-////                    tvAge.setText(profileModel.payload.date_creation);
-////                    tvLastlogin.setText(profileModel.payload.date_last_login);
-////                    tvLevel.setText(profileModel.payload.account_level);
-////                    tvStatus.setText(profileModel.payload.account_status);
-//                } catch (Error e) {
-//                    e.printStackTrace();
-//                    return;
-//                }
-//                ProfileModel.Response profileModel = gson.fromJson(s, ProfileModel.Response.class);
+
 
                 tvNickname.setText(profileModel.payload.nickname);
                 tvUsername.setText(profileModel.payload.username);
