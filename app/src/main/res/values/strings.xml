@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">COMP4521_Project</string>
+    <string name="app_name">Warzone Radar</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Warzone Radar</string>
     <string name="title_home">Home Map</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_personal">Personal</string>

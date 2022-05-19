@@ -197,13 +197,12 @@ public class HomeFragment extends Fragment
                 builder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Todo: start a post
-
                         SharedPreferences share = getActivity().getSharedPreferences("myshare", Context.MODE_PRIVATE);
                         String name = share.getString("username", null);
                         LatLng loc = marker.getPosition();
                         String type = (String) marker.getTag();
                         mainActivity.clickDashboard();
-                        dashboardFragment.clickOnInputField(name, loc, type);
+                        dashboardFragment.clickOnInputField(name, loc, type, "");
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
