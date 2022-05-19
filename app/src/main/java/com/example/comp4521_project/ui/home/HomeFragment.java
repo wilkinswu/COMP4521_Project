@@ -31,7 +31,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.comp4521_project.MainActivity;
 import com.example.comp4521_project.R;
 import com.example.comp4521_project.databinding.FragmentHomeBinding;
-import com.example.comp4521_project.databinding.FragmentMapsBinding;
 
 import com.example.comp4521_project.ui.dashboard.DashboardFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,7 +48,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.comp4521_project.databinding.FragmentMapsBinding;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -65,7 +63,6 @@ public class HomeFragment extends Fragment
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     //private FragmentHomeBinding binding;
-    private FragmentMapsBinding binding;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
     private DashboardFragment dashboardFragment;
