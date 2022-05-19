@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class LoginRequest extends JsonObjectRequest {
     LoginActivity loginAct;
-    //boolean loginned;
     private static final String SET_COOKIE_KEY = "Set-Cookie";
     private static String loginURL = "http://125.59.138.87:8090/api/basic/login";
     public LoginRequest(LoginActivity loginActivity, JSONObject obj, Response.Listener<JSONObject> listener, @Nullable Response.ErrorListener errorListener) {
@@ -26,10 +25,9 @@ public class LoginRequest extends JsonObjectRequest {
     @Override
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
         Map<String, String> responseHeaders = response.headers;
-        if(responseHeaders != null && responseHeaders.containsKey(SET_COOKIE_KEY)){
+        if (responseHeaders != null && responseHeaders.containsKey(SET_COOKIE_KEY)) {
             String cookie = responseHeaders.get(SET_COOKIE_KEY);
-
-            if(!TextUtils.isEmpty(cookie)){
+            if (!TextUtils.isEmpty(cookie)) {
                 // 将cookie存到本地，如Sharedpreference (/data/data/com.example.comp4521_project/shared_prefs/myshare.xml)
                 Log.i("headers", cookie);
                 SharedPreferences share = loginAct.getAppSharedPreferences();
@@ -40,8 +38,4 @@ public class LoginRequest extends JsonObjectRequest {
         }
         return super.parseNetworkResponse(response);
     }
-
-//    public boolean getLoginned() {
-//        return loginned;
-//    }
 }
