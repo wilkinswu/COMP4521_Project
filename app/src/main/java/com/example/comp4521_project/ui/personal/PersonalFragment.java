@@ -47,7 +47,7 @@ public class PersonalFragment extends Fragment {
         binding = FragmentPersonalBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textPersonal;
+        final TextView textView = binding.tvNickname;
 
 
         final String GET_URL = "http://125.59.138.87:8090/api/basic/getProfile";
