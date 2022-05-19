@@ -38,7 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText nicknameEditText = findViewById(R.id.regNickname);
         final Button registerButton = findViewById(R.id.btn_register);
 
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

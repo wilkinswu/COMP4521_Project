@@ -2,6 +2,7 @@ package com.example.comp4521_project.ui.home;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragAndDropPermissions;
@@ -101,12 +103,6 @@ public class HomeFragment extends Fragment
             }
         });
 
-        btnInstruction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showInstructionDialog();
-            }
-        });
 
         btnInstruction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,14 +110,6 @@ public class HomeFragment extends Fragment
                 showInstructionDialog();
             }
         });
-
-        btnInstruction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showInstructionDialog();
-            }
-        });
-
         return myView;
     }
 
@@ -158,6 +146,7 @@ public class HomeFragment extends Fragment
             public void onMapLongClick(@NonNull LatLng latLng) {
                 String strLatitude = String.format("%.2f", latLng.latitude);
                 String strLongitude = String.format("%.2f", latLng.longitude);
+
                 String result = "";
                 final String[] items = {"Help","Notification","Warning"};
                 AlertDialog.Builder listDialog = new AlertDialog.Builder(getActivity());
@@ -191,7 +180,6 @@ public class HomeFragment extends Fragment
                     }
                 });
                 listDialog.show();
-
             }
         });
 
@@ -209,6 +197,7 @@ public class HomeFragment extends Fragment
                 builder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Todo: start a post
+
                         SharedPreferences share = getActivity().getSharedPreferences("myshare", Context.MODE_PRIVATE);
                         String name = share.getString("username", null);
                         LatLng loc = marker.getPosition();
@@ -314,8 +303,9 @@ public class HomeFragment extends Fragment
             public void onClick(DialogInterface dialog, int id) {}
         });
         builder.create().show();
-
+      
     }
+
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
