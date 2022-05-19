@@ -1,13 +1,8 @@
 package com.example.comp4521_project.ui.personal;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import static com.example.comp4521_project.helper.TimeInterval.getInterval;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,32 +10,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.comp4521_project.data.model.ProfileModel;
 import com.example.comp4521_project.databinding.FragmentPersonalBinding;
 
-import com.example.comp4521_project.helper.CookieRequest;
+import com.example.comp4521_project.helper.CookieGetRequest;
 
 import com.google.gson.Gson;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class PersonalFragment extends Fragment {
 
@@ -66,7 +47,7 @@ public class PersonalFragment extends Fragment {
 
         final String GET_URL = "http://125.59.138.87:8090/api/basic/getProfile";
 
-        CookieRequest cookieRequest = new CookieRequest(getActivity(), GET_URL);
+        CookieGetRequest cookieRequest = new CookieGetRequest(getActivity(), GET_URL);
 
         cookieRequest.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

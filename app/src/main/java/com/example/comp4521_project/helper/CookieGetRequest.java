@@ -21,11 +21,11 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CookieRequest {
+public class CookieGetRequest {
 
     private final MutableLiveData<String> output ;
 
-    public CookieRequest(Context activity, final String url) {
+    public CookieGetRequest(Context activity, final String url) {
           output = new MutableLiveData<>();
 
         RequestQueue queue = Volley.newRequestQueue(activity);
