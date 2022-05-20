@@ -77,22 +77,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        DashboardViewModel dashboardViewModel =
-//                new ViewModelProvider(this).get(DashboardViewModel.class);
-//
-//        binding = FragmentDashboardBinding.inflate(inflater, container, false);
-//        View root = binding.getRoot();
-//
-//        final TextView textView = binding.textDashboard;
-//        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-//        return root;
+
         View myView = inflater.inflate(R.layout.fragment_dashboard, container,false);
-        commentList = (ListView) myView.findViewById(R.id.comment_list);
+        commentList = myView.findViewById(R.id.comment_list);
         // todo 初始化数据
         data = new ArrayList<>();
-        // 然后的话在我们的这个位置的话初始化我们的数据适配器
         adapterComment = new AdapterComment(this, getActivity(), data);
-        // 为我们的评论设置我们的适配器
         commentList.setAdapter(adapterComment);
 
         rlEnroll = myView.findViewById(R.id.rl_enroll);
@@ -116,26 +106,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
             e.printStackTrace();
         }
     }
-
-//    private void initView() {
-//        // 然后的话就是设置我们的id todo 在我们的这个位置的话初始化评论列表
-//        commentList = (ListView) findViewById(R.id.comment_list);
-//        // todo 初始化数据
-//        data = new ArrayList<>();
-//        // 然后的话在我们的这个位置的话初始化我们的数据适配器
-//        adapterComment = new AdapterComment(getActivity(),data);
-//        // 为我们的评论设置我们的适配器
-//        commentList.setAdapter(adapterComment);
-//
-//        rlEnroll = (LinearLayout) findViewById(R.id.rl_enroll);
-//        comment = (ImageView) findViewById(R.id.comment);
-//        chat = (ImageView) findViewById(R.id.chat);
-//        rlComment = (RelativeLayout) findViewById(R.id.rl_comment);
-//        hideDown = (TextView) findViewById(R.id.hide_down);
-//        commentContent = (EditText) findViewById(R.id.comment_content);
-//        commentSend = (Button) findViewById(R.id.comment_send);
-//        setListener();
-//    }
 
     public void setListener(){
         comment.setOnClickListener(this);
@@ -162,7 +132,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
             case R.id.hide_down:
                 rlEnroll.setVisibility(View.VISIBLE);
                 rlComment.setVisibility(View.GONE);
-                // 隐藏我们的输入法，然后的话暂存在我们当前的输入框中方便下一次的使用
                 InputMethodManager im = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(commentContent.getWindowToken(),0);
                 break;
@@ -185,7 +154,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
     }
 
     public void clickOnInputField(String name, LatLng location, String type, String setText) {
-        // 然后的话在我们的这个位置弹出我们的输入法
         temp_name = name;
         temp_location = location;
         temp_type = type;
@@ -193,7 +161,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
         imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
         commentContent.setText(setText);
         commentContent.requestFocus();
-        // 显示我们的评论框
         rlEnroll.setVisibility(View.GONE);
         rlComment.setVisibility(View.VISIBLE);
     }
@@ -232,12 +199,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
             // will send request on create
             CookiePostRequest cookiePostRequest = new CookiePostRequest(getActivity(), url, params);
 
-            // 然后的话就是适配我们的数据------todo 这里的话有部分的数据没有编写
-//            adapterComment.addComment(comment);
-//            commentContent.setText("");
-            // 然后的话就是使用我们的toast的话弹出我们的成功或是失败的评论
             Toast.makeText(getActivity(),"Comment send",Toast.LENGTH_LONG).show();
-
             temp_location = new LatLng(0, 0);
             temp_str_location = "(0, 0)";
             temp_type = "";
@@ -260,9 +222,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                     //String name, Location loc, String type, String content
                     String name = allblogmodel.payload.content[i].author_name;
                     String loc = allblogmodel.payload.content[i].blog_location;
+                    String content = allblogmodel.payload.content[i].blog_info;
                     String type = "";
                     LatLng temp_ll;
-                    MarkerOptions op = new MarkerOptions().title("@"+name);
+                    MarkerOptions op = new MarkerOptions().title("@"+name).snippet(content);
                     switch (allblogmodel.payload.content[i].blog_type) {
                         case 0: type = "N/A"; break;
                         case 1:
@@ -291,17 +254,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                             break;
                         case 4: type = "Comment"; break;
                     };
-                    String content = allblogmodel.payload.content[i].blog_info;
+
                     int id = allblogmodel.payload.content[i].bid;
                     Comment temp_comment = new Comment(name, loc, type, content, id);
                     adapterComment.addComment(temp_comment);
 
-
                 }
             }
         });
-
-        //Log.i("All blooooooooogs", JSONResponse.getString("message"));
     }
 
     private LatLng StrToLatLng(String str) {

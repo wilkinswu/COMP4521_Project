@@ -81,15 +81,6 @@ public class HomeFragment extends Fragment
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        HomeViewModel homeViewModel =
-//                new ViewModelProvider(this).get(HomeViewModel.class);
-
-//        binding = FragmentHomeBinding.inflate(inflater, container, false);
-//        View root = binding.getRoot();
-
-//        final TextView textView = binding.textHome;
-//        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-//        return root;
         View myView = inflater.inflate(R.layout.fragment_home, container,false);
         btnChangeType = myView.findViewById(R.id.btnChangeType);
         btnInstruction = myView.findViewById(R.id.btnInstruction);
@@ -210,9 +201,7 @@ public class HomeFragment extends Fragment
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
-                // Set other dialog properties
 
-                // Create the AlertDialog
                 builder.create().show();
                 return false;
             }
@@ -252,8 +241,6 @@ public class HomeFragment extends Fragment
                 mMap.setMyLocationEnabled(true);
             }
         } else {
-            // Permission to access the location is missing. Show rationale and request permission
-//            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE, mManifest.permission.ACCESS_FINE_LOCATION, true);
             requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 100);
         }
     }
@@ -287,7 +274,6 @@ public class HomeFragment extends Fragment
         }
         else {
             // When permission are denied
-            // Display toast
             Toast.makeText(getActivity(),"Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
@@ -321,16 +307,6 @@ public class HomeFragment extends Fragment
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
-
-//    @Override
-//    public void onClick(View v) {
-//        if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
-//            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-//        }
-//        else
-//            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//    }
 
 }
 
