@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragment2.setHomeFragment(fragment1);
 
 //        ViewPager viewPager = findViewById(R.id.container);
 //        viewPager.setOffscreenPageLimit(2);

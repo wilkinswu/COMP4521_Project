@@ -74,6 +74,8 @@ public class HomeFragment extends Fragment
         mainActivity = m;
     }
 
+    public GoogleMap getmMap() {return mMap;}
+
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -303,7 +305,7 @@ public class HomeFragment extends Fragment
     }
 
 
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+    public BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
         vectorDrawable.setBounds(0,0,vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);

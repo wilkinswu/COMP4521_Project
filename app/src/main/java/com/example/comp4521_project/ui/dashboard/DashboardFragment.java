@@ -34,8 +34,10 @@ import com.example.comp4521_project.data.model.ProfileModel;
 import com.example.comp4521_project.databinding.FragmentDashboardBinding;
 import com.example.comp4521_project.helper.CookieGetRequest;
 import com.example.comp4521_project.helper.CookiePostRequest;
+import com.example.comp4521_project.ui.home.HomeFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -64,11 +66,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
     private List<Comment> data;
     private AdapterComment adapterComment;
 
+    private HomeFragment homeFragment;
     private String temp_name = "N/A";
     private LatLng temp_location = new LatLng(0, 0);
     private String temp_str_location = "(0, 0)";
     private String temp_type = "N/A";
     Gson gson = new Gson();
+
+    public void setHomeFragment(HomeFragment h) {homeFragment = h;}
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -167,6 +172,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
             case R.id.refresh:
                 try {
                     adapterComment.data.clear();
+                    homeFragment.getmMap().clear();
                     refreshPage();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -255,21 +261,47 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                     String name = allblogmodel.payload.content[i].author_name;
                     String loc = allblogmodel.payload.content[i].blog_location;
                     String type = "";
+                    LatLng temp_ll;
+                    MarkerOptions op = new MarkerOptions().title("@"+name);
                     switch (allblogmodel.payload.content[i].blog_type) {
                         case 0: type = "N/A"; break;
-                        case 1: type = "Help"; break;
-                        case 2: type = "Notification"; break;
-                        case 3: type = "Warning"; break;
+                        case 1:
+                            type = "Help";
+                            temp_ll = StrToLatLng(loc);
+                            op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_help_24));
+                            homeFragment.getmMap().addMarker(op).setTag("Help");
+                            break;
+                        case 2:
+                            type = "Notification";
+                            temp_ll = StrToLatLng(loc);
+                            op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_notifications_24));
+                            homeFragment.getmMap().addMarker(op).setTag("Notification");
+                            break;
+                        case 3:
+                            type = "Warning";
+                            temp_ll = StrToLatLng(loc);
+                            op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_warning_24));
+                            homeFragment.getmMap().addMarker(op).setTag("Warning");
+                            break;
                         case 4: type = "Comment"; break;
                     };
                     String content = allblogmodel.payload.content[i].blog_info;
                     int id = allblogmodel.payload.content[i].bid;
                     Comment temp_comment = new Comment(name, loc, type, content, id);
                     adapterComment.addComment(temp_comment);
+
+
                 }
             }
         });
 
         //Log.i("All blooooooooogs", JSONResponse.getString("message"));
+    }
+
+    private LatLng StrToLatLng(String str) {
+        String[] arg = str.split(",");
+        String a = arg[0].trim().replaceAll("\\(", "");
+        String b = arg[1].trim().replaceAll("\\)", "");
+        return new LatLng(Double.parseDouble(a), Double.parseDouble(b));
     }
 }
