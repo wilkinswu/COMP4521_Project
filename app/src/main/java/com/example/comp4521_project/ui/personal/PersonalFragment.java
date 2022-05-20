@@ -153,7 +153,7 @@ public class PersonalFragment extends Fragment {
                     default:
                         level = "Error";
                 }
-                switch (profileModel.payload.account_level) {
+                switch (profileModel.payload.account_status) {
                     case 0:
                         status = "NotRegistered";
                         break;
