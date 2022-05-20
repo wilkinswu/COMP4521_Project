@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.setting.SettingActivity">
+
+    <PreferenceCategory
+        app:key="set_basic_category"
+        app:title="Basic">
+
+        <SwitchPreferenceCompat
+            app:key="notifications"
+            app:title="Enable message notifications" />
+
+        <Preference
+            app:key="feedback"
+            app:summary="Report technical issues or suggest new features"
+            app:title="Send feedback" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="set_profile_category"
+        app:title="Update Profile">
+
+        <EditTextPreference
+            app:key="update_username"
+            app:title="Username" />
+
+        <EditTextPreference
+            app:key="update_nickname"
+            app:title="Nickname" />
+
+        <ListPreference
+            android:defaultValue="-1"
+            android:key="update_account_level"
+            android:entries="@array/pref_account_level_titles"
+            android:entryValues="@array/pref_account_level_values"
+            android:title="Account Level"
+            app:summary="Basic, Government and Expert"/>
+
+        <EditTextPreference
+            app:key="update_password"
+            app:title="Password"
+            app:summary="Please enter 8 chars consists at least one of integer, uppercase and lowercase letters"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
