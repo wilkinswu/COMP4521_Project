@@ -8,11 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,6 +27,7 @@ import com.example.comp4521_project.databinding.FragmentPersonalBinding;
 import com.example.comp4521_project.helper.CookieGetRequest;
 
 import com.example.comp4521_project.ui.login.LoginActivity;
+import com.example.comp4521_project.ui.setting.SettingActivity;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -38,15 +43,65 @@ public class PersonalFragment extends Fragment {
 
         binding = FragmentPersonalBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        final Button logout = binding.logout;
+        final Button setting = binding.setting;
         final TextView tvNickname = binding.tvNickname;
+
+        // personal view does nothing at all.
+        personalViewModel.getText().observe(getViewLifecycleOwner(), tvNickname::setText);
+
+        // get profile
+        refresh();
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // opening a new intent to open settings activity.
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ScrollView scrollView = binding.ScrollView01;
+        scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+
+                if (scrollView.getScrollY() == 0) {
+                    Log.i("Scroll", "TOP");
+                    refresh();
+                }
+
+            }
+        });
+
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+
+    public void refresh(){
+
+
         final TextView tvUsername = binding.tvUsername;
         final TextView tvAge = binding.tvAge;
-//        final TextView tvBlognumber = binding.tvBlognumber;
         final TextView tvLastlogin = binding.tvLastlogin;
         final TextView tvLevel = binding.tvLevel;
         final TextView tvStatus = binding.tvStatus;
-        final Button logout = binding.logout;
+        final TextView tvNickname = binding.tvNickname;
 
         Gson gson = new Gson();
 
@@ -70,8 +125,8 @@ public class PersonalFragment extends Fragment {
                 String sincelastlogin = "";
 
                 try {
-                    age = getInterval( profileModel.payload.date_creation);
-                    sincelastlogin= getInterval( profileModel.payload.date_last_login);
+                    age = getInterval(profileModel.payload.date_creation);
+                    sincelastlogin = getInterval(profileModel.payload.date_last_login);
                     tvAge.setText(age);
                     tvLastlogin.setText(sincelastlogin);
 
@@ -98,7 +153,7 @@ public class PersonalFragment extends Fragment {
                     default:
                         level = "Error";
                 }
-                switch (profileModel.payload.account_level) {
+                switch (profileModel.payload.account_status) {
                     case 0:
                         status = "NotRegistered";
                         break;
@@ -117,24 +172,5 @@ public class PersonalFragment extends Fragment {
 
             }
         });
-
-        personalViewModel.getText().observe(getViewLifecycleOwner(), tvNickname::setText);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        return root;
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-
 }
