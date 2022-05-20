@@ -26,8 +26,9 @@ public class SettingFragment extends PreferenceFragmentCompat {
                 PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
-        final String UPDATE_OTHERS_URL = "http://125.59.138.87:8090/api/basic/updateProfile";
-        final String UPDATE_PASSWORD_URL = "http://125.59.138.87:8090/api/basic/updatePassword";
+        final String UPDATE_OTHERS_URL = getString(R.string.domain_port) + "/api/basic/updateProfile";
+
+        final String UPDATE_PASSWORD_URL = getString(R.string.domain_port) + "/api/basic/updatePassword";
 
 
         // Instance field for listener
@@ -72,12 +73,11 @@ public class SettingFragment extends PreferenceFragmentCompat {
                         }
 
 
-                        if ( params.isEmpty()) {
+                        if (params.isEmpty()) {
                             Log.i("update", "input cannot be empty");
                             return;
                         }
-                        if(getActivity() == null)
-                        {
+                        if (getActivity() == null) {
                             return;
                         }
                         CookieOtherRequest cookieRequest =

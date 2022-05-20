@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.comp4521_project.R;
 import com.example.comp4521_project.RegisterActivity;
 import com.example.comp4521_project.data.model.ProfileModel;
 import com.example.comp4521_project.databinding.FragmentPersonalBinding;
@@ -105,7 +106,7 @@ public class PersonalFragment extends Fragment {
 
         Gson gson = new Gson();
 
-        final String GET_URL = "http://125.59.138.87:8090/api/basic/getProfile";
+        final String GET_URL = getString(R.string.domain_port) + "/api/basic/getProfile";
 
         CookieGetRequest cookieRequest = new CookieGetRequest(getActivity(), GET_URL);
 

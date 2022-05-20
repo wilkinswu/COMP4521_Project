@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.comp4521_project.MainActivity;
+import com.example.comp4521_project.R;
 import com.example.comp4521_project.RegisterActivity;
 import com.example.comp4521_project.data.model.LoggedInUser;
 import com.example.comp4521_project.ui.login.LoginActivity;
@@ -105,12 +106,14 @@ public class LoginDataSource {
 
             //synchronized (waitObject) {
                 RequestQueue queue = Volley.newRequestQueue(loginActivity);
-                String url = "http://125.59.138.87:8090/api/basic/login";
+                String url = loginActivity.getString(R.string.domain_port)  +  "/api/basic/login";
+                Log.i("URL", url);
                 LoginRequest loginRequest = new LoginRequest(
                         loginActivity,
                         loginUser,
                         responseListener,
-                        errorListener);
+                        errorListener,
+                        url);
                 queue.start();
                 queue.add(loginRequest);
 

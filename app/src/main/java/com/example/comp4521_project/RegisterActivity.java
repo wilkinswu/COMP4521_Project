@@ -66,8 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(intent);
                                 Log.i("success", "yeahhhhhhhhhhhhhhhhhhhhhhh!");
-                            }
-                            else {
+                            } else {
                                 // Actually not reachable...
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
                                 Log.i("AlertDialog", "Showing");
@@ -94,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                         final String statusCode = String.valueOf(error.networkResponse.statusCode);
                         //get response body and parse with appropriate encoding
                         try {
-                            body = new String(error.networkResponse.data,"UTF-8");
+                            body = new String(error.networkResponse.data, "UTF-8");
                             jsonbody = new JSONObject(body);
                         } catch (UnsupportedEncodingException | JSONException e) {
                             // exception
@@ -114,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                 };
 
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-                String url = "http://125.59.138.87:8090/api/basic/register";
+                String url = getString(R.string.domain_port) + "/api/basic/register";
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, obj, responseListener, errorListener);
                 queue.start();
                 queue.add(jsonObjectRequest);

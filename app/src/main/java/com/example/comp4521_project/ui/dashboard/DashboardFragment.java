@@ -224,7 +224,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                 case "Comment": int_type = "4"; break;
             }
 
-            String url = "http://125.59.138.87:8090/api/blog/writeOwnBlog";
+            String url = getString(R.string.domain_port) +  "/api/blog/writeOwnBlog";
             Map<String, String> params = new HashMap<>();
             params.put("blog_info", inputText);
             params.put("blog_location", temp_str_location);
@@ -246,7 +246,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
 
     public void refreshPage() throws JSONException {
         List<Comment> commentList = adapterComment.data;
-        String url = "http://125.59.138.87:8090/api/blog/readPublicBlog";
+        String url = getString(R.string.domain_port) +  "/api/blog/readPublicBlog";
         Map<String, String> params = new HashMap<>();
         CookieGetRequest cookieGetRequest = new CookieGetRequest(getActivity(), url);
         cookieGetRequest.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

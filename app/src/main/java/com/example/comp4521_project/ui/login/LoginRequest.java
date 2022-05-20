@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.comp4521_project.R;
 
 import org.json.JSONObject;
 
@@ -16,9 +17,9 @@ import java.util.Map;
 public class LoginRequest extends JsonObjectRequest {
     LoginActivity loginAct;
     private static final String SET_COOKIE_KEY = "Set-Cookie";
-    private static String loginURL = "http://125.59.138.87:8090/api/basic/login";
-    public LoginRequest(LoginActivity loginActivity, JSONObject obj, Response.Listener<JSONObject> listener, @Nullable Response.ErrorListener errorListener) {
-        super(Method.POST, loginURL, obj, listener, errorListener);
+//    private static String loginURL = loginAct.getString(R.string.domain_port) + "/api/basic/login";
+    public LoginRequest(LoginActivity loginActivity, JSONObject obj, Response.Listener<JSONObject> listener, @Nullable Response.ErrorListener errorListener, String url) {
+        super(Method.POST, url, obj, listener, errorListener);
         loginAct = loginActivity;
     }
 
