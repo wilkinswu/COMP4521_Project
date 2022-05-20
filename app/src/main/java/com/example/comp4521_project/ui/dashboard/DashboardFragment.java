@@ -244,7 +244,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void refreshPage() throws JSONException {
+    public void refreshPage() throws JSONException {
         List<Comment> commentList = adapterComment.data;
         String url = "http://125.59.138.87:8090/api/blog/readPublicBlog";
         Map<String, String> params = new HashMap<>();
@@ -268,20 +268,26 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                         case 1:
                             type = "Help";
                             temp_ll = StrToLatLng(loc);
-                            op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_help_24));
-                            homeFragment.getmMap().addMarker(op).setTag("Help");
+                            if (homeFragment.getmMap() != null) {
+                                op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_help_24));
+                                homeFragment.getmMap().addMarker(op).setTag("Help");
+                            }
                             break;
                         case 2:
                             type = "Notification";
                             temp_ll = StrToLatLng(loc);
-                            op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_notifications_24));
-                            homeFragment.getmMap().addMarker(op).setTag("Notification");
+                            if (homeFragment.getmMap() != null) {
+                                op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_notifications_24));
+                                homeFragment.getmMap().addMarker(op).setTag("Notification");
+                            }
                             break;
                         case 3:
                             type = "Warning";
                             temp_ll = StrToLatLng(loc);
-                            op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_warning_24));
-                            homeFragment.getmMap().addMarker(op).setTag("Warning");
+                            if (homeFragment.getmMap() != null) {
+                                op.position(temp_ll).icon(homeFragment.bitmapDescriptorFromVector(homeFragment.getActivity(), R.drawable.ic_baseline_warning_24));
+                                homeFragment.getmMap().addMarker(op).setTag("Warning");
+                            }
                             break;
                         case 4: type = "Comment"; break;
                     };

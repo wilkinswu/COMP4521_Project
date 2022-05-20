@@ -54,6 +54,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.util.Map;
 
 public class HomeFragment extends Fragment
@@ -233,6 +235,12 @@ public class HomeFragment extends Fragment
             }
 
         });
+
+        try {
+            dashboardFragment.refreshPage();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("MissingPermission")
